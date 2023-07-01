@@ -37,6 +37,7 @@ interface IForm {
   username: string;
   password: string;
   confirmation: string;
+  extraError?: string;
 }
 
 function ToDoList() {
@@ -44,14 +45,23 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
     },
   });
-  const onValid = (data: any) => {
-    console.log(data);
+  const onValid = (data: IForm) => {
+    if (data.password !== data.confirmation) {
+      setError(
+        "confirmation",
+        { message: "Password is not the same." },
+        { shouldFocus: true }
+      );
+    }
+    // setError("extraError", { message: "Server offline." });
   };
+  console.log(errors);
   return (
     <div>
       <form
@@ -63,14 +73,22 @@ function ToDoList() {
             required: "Email Required",
             pattern: {
               value: /^[A-Za-z0-9._%+-]+@naver\.com$/,
-              message: "Only naver emails allowed",
+              message: "Only naver emails allowed.",
             },
           })}
           placeholder="email"
         />
         <span>{errors?.email?.message}</span>
         <input
-          {...register("firstName", { required: "Write First Name" })}
+          {...register("firstName", {
+            required: "Write First Name",
+            validate: {
+              noNico: (value) =>
+                value.includes("nico") ? "no nicos allowed" : true,
+              noNick: (value) =>
+                value.includes("nick") ? "no nick allowed" : true,
+            },
+          })}
           placeholder="firstName"
         />
         <span>{errors?.firstName?.message}</span>
@@ -84,7 +102,7 @@ function ToDoList() {
             required: "Write Username",
             minLength: {
               value: 5,
-              message: "Your password is too short.",
+              message: "Your username is too short.",
             },
           })}
           placeholder="username"
@@ -93,7 +111,10 @@ function ToDoList() {
         <input
           {...register("password", {
             required: "Password is Required",
-            minLength: 5,
+            minLength: {
+              value: 5,
+              message: "Your password is too short.",
+            },
           })}
           placeholder="password"
         />
@@ -101,12 +122,12 @@ function ToDoList() {
         <input
           {...register("confirmation", {
             required: "Confirm Password",
-            minLength: 5,
           })}
           placeholder="confirmation"
         />
         <span>{errors?.confirmation?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
