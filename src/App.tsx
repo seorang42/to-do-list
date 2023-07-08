@@ -2,7 +2,12 @@ import { createGlobalStyle } from "styled-components";
 import ToDoList from "./components/ToDoList";
 
 const GlobalStyle = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -55,7 +60,7 @@ table {
 }
 body {
   font-weight:300;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Pretendard-Regular', sans-serif;
   background-color:${(props) => props.theme.bgColor};
   color:${(props) => props.theme.textColor};
   line-height: 1.2;
@@ -63,6 +68,15 @@ body {
 a {
   text-decoration:none;
   color:inherit;
+}
+button, input {
+  border:none;
+}
+button {
+  transition:background-color 0.1s ease-in;
+  &:hover{
+    background-color:#BDBDBD;
+  }
 }
 `;
 
